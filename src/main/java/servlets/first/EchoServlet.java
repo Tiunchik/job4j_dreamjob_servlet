@@ -3,7 +3,7 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets;
+package servlets.first;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
