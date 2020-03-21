@@ -24,7 +24,7 @@ public enum ValidateService {
 
     private static final Logger LOG = LogManager.getLogger(ValidateService.class.getName());
 
-    private static final Store STORE = MemoreStore.MEMORE_STORE;
+    private static final Store STORE = DBStore.getInstance();
 
     public void add(User user) {
         if (findByID(user) == null) {
@@ -33,23 +33,12 @@ public enum ValidateService {
     }
 
     public void update(User user) {
-        if (findByID(user) == null) {
+        User temp = new User();
+        temp.setId(user.getId());
+        if (findByID(temp) == null) {
             STORE.add(user);
         } else {
-            User temp = STORE.findByID(user);
-            if (user.getName() != null) {
-                temp.setName(user.getName());
-            }
-            if (user.getLogin() != null) {
-                temp.setLogin(user.getLogin());
-            }
-            if (user.getEmail() != null) {
-                temp.setEmail(user.getEmail());
-            }
-            if (user.getCreateDate() != null) {
-                temp.setCreateDate(user.getCreateDate());
-            }
-            STORE.update(temp);
+            STORE.update(user);
         }
     }
 
