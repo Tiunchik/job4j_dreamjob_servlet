@@ -18,106 +18,92 @@ import java.io.PrintWriter;
 import java.util.*;
 
 /**
- * Class UserServlet -
+ * Class UserServlet - create list of added users
  *
  * @author Maksim Tiunchik (senebh@gmail.com)
- * @version 0.1
- * @since 19.03.2020
+ * @version 0.2
+ * @since 21.03.2020
  */
 public class UserServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserServlet.class.getName());
 
+    /**
+     * logic block, have connection to DB
+     */
     private static final ValidateService LOGIC = ValidateService.LOGIC;
 
+    /**
+     * show full list of users that is consisted into DB
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        writer.append("<h2>");
-        writer.append(
-                String.format("| %10s | %10s | %10s | %10s | %10s |", "ID", "Name", "Login", "Email", "CreateDate"));
-        writer.append("</h2>");
-        writer.append("\n");
+        StringBuilder out = new StringBuilder("<html>");
+        out.append("<head>\n"
+                + "<meta charset=\"UTF-8\">\n"
+                + "<title>List of users</title>\n"
+                + "<style>\n"
+                + "body {\n"
+                + "font-size: 120%;\n"
+                + "font-family: \"Times New Roman\",sans-serif;\n"
+                + "color: #333333;\n"
+                + "}\n"
+                + "table {\n"
+                + "border: 1px solid black;\n"
+                + "width: 800px;\n"
+                + "}\n"
+                + "\n"
+                + "tr {\n"
+                + "border: 1px dashed grey;\n"
+                + "}\n"
+                + "\n"
+                + "th {\n"
+                + "border: 1px dashed grey;\n"
+                + "}\n"
+                + "</style>\n"
+                + "</head>\n"
+                + "<body>\n"
+                + "<table>\n"
+                + "<tr>\n"
+                + "<th>ID number</th>\n"
+                + "<th>Name</th>\n"
+                + "<th>login</th>\n"
+                + "<th>E-mail</th>\n"
+                + "<th>Creation Date</th>\n"
+                + "<th>Control buttons</th>\n"
+                + "</tr>");
         LOGIC.findALL().forEach(e -> {
-            writer.append("<p>");
-            writer.append(String.format("| %10s | %10s | %10s | %10s | %10s |",
+            out.append("<tr>\n");
+            out.append(String.format("<th> %10s </th>\n<th> %10s  </th>\n<th> %10s  </th>\n<th> %10s  </th>\n<th> %10s </th>\n",
                     e.getId(), e.getName(), e.getLogin(), e.getEmail(), e.getCreateDate()));
-            writer.append("</p>");
-            writer.append("\n");
+            out.append("<th>\n"
+                    + "<form action=\"" + req.getContextPath() + "/edit? method=\"get\">\n"
+                    + "<input type=\"hidden\" name=\"id\" value=\"" + e.getId() + "\">"
+                    + "<input type=\"submit\" value=\"Change\">\n"
+                    + "</form>\n"
+                    + "<form action=\"" + req.getContextPath() + "/list\" method=\"post\">\n"
+                    + "<input type=\"hidden\" name=\"action\" value=\"delete\">"
+                    + "<input type=\"hidden\" name=\"id\" value=\"" + e.getId() + "\">"
+                    + "<input type=\"submit\" value=\"Delete\">\n"
+                    + "</form>\n"
+                    + "\n"
+                    + "</th>\n"
+                    + "</tr>");
         });
+        out.append("</table>\n"
+                + "<form>"
+                + "<input type=\"submit\" value=\"add user\" formaction=\""
+                + req.getContextPath() + "/create\" formmethod=\"get\">"
+                + "</form>"
+                + "</body>\n"
+                + "</html>");
+        writer.append(out.toString());
         writer.flush();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //имхо это надо делать через стратегию, но сейчас и switch покатит
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        Map<String, String> s = findParametrs(req);
-        switch (s.get("action")) {
-            case ("add"):
-                if (s.containsKey("id") && s.containsKey("name")) {
-                    Calendar today = Calendar.getInstance();
-                    today.set(Calendar.HOUR_OF_DAY, 0);
-                    Date date = today.getTime();
-                    User temp = new User();
-                    temp.setId(Integer.parseInt(s.get("id")));
-                    temp.setName(s.get("name"));
-                    temp.setCreateDate(date);
-                    LOGIC.add(temp);
-                    writer.append("User is added\n");
-                    writer.flush();
-                }
-                break;
-            case ("update"):
-                if (s.containsKey("id") && (s.containsKey("login") || s.containsKey("email"))) {
-                    User temp = new User();
-                    temp.setLogin(s.get("login"));
-                    temp.setEmail(s.get("name"));
-                    LOGIC.update(temp);
-                    writer.append("User is updated\n");
-                    writer.flush();
-                }
-                break;
-            case ("delete"):
-                if (s.containsKey("id")) {
-                    User temp = new User();
-                    temp.setId(Integer.parseInt(s.get("id")));
-                    LOGIC.delete(temp);
-                    writer.append("User is deleted\n");
-                    writer.flush();
-                }
-                break;
-            case ("findbyid"):
-                if (s.containsKey("id")) {
-                    User temp = new User();
-                    temp.setId(Integer.parseInt(s.get("id")));
-                    temp = LOGIC.findByID(temp);
-                    writer.append("<h2>");
-                    writer.append(
-                            String.format("| %10s | %10s | %10s | %10s | %10s |", "ID", "Name", "Login", "Email", "CreateDate"));
-                    writer.append("</h2>");
-                    writer.append("\n");
-                    writer.append("<p>");
-                    writer.append(String.format("| %10s | %10s | %10s | %10s | %10s |",
-                            temp.getId(), temp.getName(), temp.getLogin(), temp.getEmail(), temp.getCreateDate()));
-                    writer.append("</p>");
-                    writer.append("\n");
-                    writer.flush();
-                }
-                break;
-            default:
-                writer.append("Incorrect input");
-                writer.flush();
-                break;
-        }
-
-    }
-
-    private Map<String, String> findParametrs(HttpServletRequest req) {
-        HashMap<String, String> temp = new HashMap<>();
-        req.getParameterNames().asIterator().forEachRemaining(e -> {
-            temp.put(e, req.getParameter(e));
-        });
-        return temp;
     }
 }
