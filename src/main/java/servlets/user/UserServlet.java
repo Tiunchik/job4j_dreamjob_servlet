@@ -33,7 +33,7 @@ public class UserServlet extends HttpServlet {
     private static final ValidateService LOGIC = ValidateService.LOGIC;
 
     /**
-     * show full list of users that is consisted into DB
+     * add user to list of users that is consisted into DB
      *
      * @param req
      * @param resp
@@ -41,69 +41,23 @@ public class UserServlet extends HttpServlet {
      * @throws IOException
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        StringBuilder out = new StringBuilder("<html>");
-        out.append("<head>\n"
-                + "<meta charset=\"UTF-8\">\n"
-                + "<title>List of users</title>\n"
-                + "<style>\n"
-                + "body {\n"
-                + "font-size: 120%;\n"
-                + "font-family: \"Times New Roman\",sans-serif;\n"
-                + "color: #333333;\n"
-                + "}\n"
-                + "table {\n"
-                + "border: 1px solid black;\n"
-                + "width: 800px;\n"
-                + "}\n"
-                + "\n"
-                + "tr {\n"
-                + "border: 1px dashed grey;\n"
-                + "}\n"
-                + "\n"
-                + "th {\n"
-                + "border: 1px dashed grey;\n"
-                + "}\n"
-                + "</style>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + "<table>\n"
-                + "<tr>\n"
-                + "<th>ID number</th>\n"
-                + "<th>Name</th>\n"
-                + "<th>login</th>\n"
-                + "<th>E-mail</th>\n"
-                + "<th>Creation Date</th>\n"
-                + "<th>Control buttons</th>\n"
-                + "</tr>");
-        LOGIC.findALL().forEach(e -> {
-            out.append("<tr>\n");
-            out.append(String.format("<th> %10s </th>\n<th> %10s  </th>\n<th> %10s  </th>\n<th> %10s  </th>\n<th> %10s </th>\n",
-                    e.getId(), e.getName(), e.getLogin(), e.getEmail(), e.getCreateDate()));
-            out.append("<th>\n"
-                    + "<form action=\"" + req.getContextPath() + "/edit? method=\"get\">\n"
-                    + "<input type=\"hidden\" name=\"id\" value=\"" + e.getId() + "\">"
-                    + "<input type=\"submit\" value=\"Change\">\n"
-                    + "</form>\n"
-                    + "<form action=\"" + req.getContextPath() + "/list\" method=\"post\">\n"
-                    + "<input type=\"hidden\" name=\"action\" value=\"delete\">"
-                    + "<input type=\"hidden\" name=\"id\" value=\"" + e.getId() + "\">"
-                    + "<input type=\"submit\" value=\"Delete\">\n"
-                    + "</form>\n"
-                    + "\n"
-                    + "</th>\n"
-                    + "</tr>");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //имхо это надо делать через стратегию, но сейчас и switch покатит
+        Map<String, String> s = findParametrs(req);
+        if (s.containsKey("id") && s.get("action").equals("delete")) {
+            User temp = new User();
+            temp.setId(Integer.parseInt(s.get("id")));
+            LOGIC.delete(temp);
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+        }
+    }
+
+
+    private Map<String, String> findParametrs(HttpServletRequest req) {
+        HashMap<String, String> temp = new HashMap<>();
+        req.getParameterNames().asIterator().forEachRemaining(e -> {
+            temp.put(e, req.getParameter(e));
         });
-        out.append("</table>\n"
-                + "<form>"
-                + "<input type=\"submit\" value=\"add user\" formaction=\""
-                + req.getContextPath() + "/create\" formmethod=\"get\">"
-                + "</form>"
-                + "</body>\n"
-                + "</html>");
-        writer.append(out.toString());
-        writer.flush();
+        return temp;
     }
 }

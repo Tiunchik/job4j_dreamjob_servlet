@@ -34,42 +34,6 @@ public class UserCreateServlet extends HttpServlet {
      */
     private static final ValidateService LOGIC = ValidateService.LOGIC;
 
-    /**
-     * show page for creating new user
-     *
-     * @param req
-     * @param resp
-     * @throws ServletException
-     * @throws IOException
-     */
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        StringBuilder out = new StringBuilder("<html>");
-        out.append("<!DOCTYPE html>\n"
-                + "<html lang=\"en\">\n"
-                + "<head>\n"
-                + "<meta charset=\"UTF-8\">\n"
-                + "<title>Create User</title>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + "<form>\n"
-                + "<br>\n"
-                + "<label for=\"name\">User name</label>\n"
-                + "<input type=\"text\" name=\"name\" id=\"name\" value=\"\">\n"
-                + "<br>\n"
-                + "<label for=\"id\">User ID</label>\n"
-                + "<input type=\"number\" name=\"id\" id=\"id\" value=\"\">\n"
-                + "<br><br>\n"
-                + "<input type=\"submit\" value=\"Create\" formaction=\""
-                + req.getContextPath() + "/create\" formmethod=\"post\">\n"
-                + "</form>\n"
-                + "</body>\n"
-                + "</html>");
-        writer.append(out.toString());
-        writer.flush();
-    }
 
     /**
      * add user to db
@@ -81,7 +45,6 @@ public class UserCreateServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
         Map<String, String> s = findParametrs(req);
         if (s.containsKey("id") && s.containsKey("name")) {
             Calendar today = Calendar.getInstance();
@@ -92,12 +55,8 @@ public class UserCreateServlet extends HttpServlet {
             temp.setName(s.get("name"));
             temp.setCreateDate(date);
             LOGIC.add(temp);
-            writer.append("User is added\n");
-            writer.flush();
-        } else {
-            writer.append("Incorrect input");
-            writer.flush();
         }
+        resp.sendRedirect(req.getContextPath() + "/index.jsp");
     }
 
     private Map<String, String> findParametrs(HttpServletRequest req) {

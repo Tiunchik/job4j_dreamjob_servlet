@@ -33,42 +33,6 @@ public class UserUpdateServlet extends HttpServlet {
     private static final ValidateService LOGIC = ValidateService.LOGIC;
 
     /**
-     * show apge for changing information about user
-     *
-     * @param req
-     * @param resp
-     * @throws ServletException
-     * @throws IOException
-     */
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        Map<String, String> s = findParametrs(req);
-        User temp = new User();
-        temp.setId(Integer.parseInt(s.get("id")));
-        temp = LOGIC.findByID(temp);
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        StringBuilder out = new StringBuilder("<html>");
-        out.append("<html lang=\"en\">\n"
-                + "<head>\n"
-                + "<meta charset=\"UTF-8\">\n"
-                + "<title>Update user</title>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + "<form action=\"" + req.getContextPath() + "/edit\" method=\"post\">\n"
-                + "ID: <input type=\"number\" name=\"id\" value=\"" + temp.getId() + "\" readonly>\n"
-                + "Name: <input type=\"text\" name=\"name\" value=\"" + temp.getName() + "\">\n"
-                + "Login: <input type=\"text\" name=\"login\" value=\"" + temp.getLogin() + "\">\n"
-                + "Email: <input type=\"text\" name=\"email\" value=\"" + temp.getEmail() + "\">\n"
-                + "<input type=\"submit\" value=\"Change\" value=\"\">\n"
-                + "</form>\n"
-                + "</body>\n"
-                + "</html>");
-        writer.append(out.toString());
-        writer.flush();
-    }
-
-    /**
      * post request for changing of user
      *
      * @param req
@@ -79,7 +43,6 @@ public class UserUpdateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, String> s = findParametrs(req);
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
         if (s.containsKey("id")) {
             User temp = new User();
             temp.setId(Integer.parseInt(s.get("id")));
@@ -87,9 +50,9 @@ public class UserUpdateServlet extends HttpServlet {
             temp.setEmail(s.get("email"));
             temp.setName(s.get("name"));
             LOGIC.update(temp);
-            writer.append("User is updated\n");
-            writer.flush();
         }
+        resp.sendRedirect(req.getContextPath() + "/index.jsp");
+
     }
 
     private Map<String, String> findParametrs(HttpServletRequest req) {
