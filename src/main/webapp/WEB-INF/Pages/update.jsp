@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="servlets.user.User" %>
 <%@ page import="servlets.user.ValidateService" %><%--
   Created by IntelliJ IDEA.
@@ -23,18 +24,15 @@
     }
 </style>
 <body>
-<% int id = Integer.parseInt(request.getParameter("id"));%>
-<% User temp = new User();%>
-<% temp.setId(id);%>
-<% temp = ValidateService.LOGIC.findByID(temp);%>
-<form action="<%=request.getContextPath()%>/edit?" method="post">
-    ID: <input type="number" name="id" value="<%=temp.getId()%>" readonly>
+
+<form action="${pageContext.request.contextPath}/edit?" method="post">
+    ID: <input type="number" name="id" value="<c:out value="${user.id}"></c:out>" readonly>
     <br>
-    Name: <input type="text" name="name" value="<%=temp.getName()%>">
+    Name: <input type="text" name="name" value="<c:out value="${user.name}"></c:out>">
     <br>
-    Login: <input type="text" name="login" value="<%=temp.getLogin()%>">
+    Login: <input type="text" name="login" value="<c:out value="${user.login}"></c:out>">
     <br>
-    Email: <input type="text" name="email" value="<%=temp.getEmail()%>">
+    Email: <input type="text" name="email" value="<c:out value="${user.email}"></c:out>">
     <br>
     <input type="submit" value="Change">
 </form>

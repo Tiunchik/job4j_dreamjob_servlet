@@ -1,5 +1,3 @@
-<%@ page import="servlets.user.User" %>
-<%@ page import="servlets.user.ValidateService" %>
 <%--
   Created by IntelliJ IDEA.
   User: Tiunchik
@@ -7,6 +5,7 @@
   Time: 18:55
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -51,33 +50,29 @@
         <th>Control buttons</th>
     </tr>
     <tr>
-        <% for (User user : ValidateService.LOGIC.findALL()) { %>
-        <td><%=user.getId()%>
-        </td>
-        <td><%=user.getName()%>
-        </td>
-        <td><%=user.getLogin()%>
-        </td>
-        <td><%=user.getEmail()%>
-        </td>
-        <td><%=user.getCreateDate()%>
-        </td>
+        <c:forEach items="${users}" var="user">
+        <td><c:out value="${user.id}"></c:out></td>
+        <td><c:out value="${user.name}"></c:out></td>
+        <td><c:out value="${user.login}"></c:out></td>
+        <td><c:out value="${user.email}"></c:out></td>
+        <td><c:out value="${user.createDate}"></c:out></td>
         <td>
-            <form action="<%=request.getContextPath()%>/update.jsp?" method="get">
-                <input type="hidden" name="id" value="<%=user.getId()%>">
+            <form action="${pageContext.request.contextPath}/edit?" method="get">
+                <input type="hidden" name="id" value="<c:out value="${user.id}"></c:out>">
                 <input type="submit" value="Change">
             </form>
-            <form action="<%=request.getContextPath()%>/list" method="post">
+            <form action="${pageContext.request.contextPath}/" method="post">
                 <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="<%=user.getId()%>">
+                <input type="hidden" name="id" value="<c:out value="${user.id}"></c:out>">
                 <input type="submit" value="Delete">
             </form>
         </td>
     </tr>
-    <% } %>
-    <form action="<%=request.getContextPath()%>/create.jsp" method="get">
-        <input type="submit" value="Add user">
-    </form>
+    </c:forEach>
 </table>
+<br>
+<form action="${pageContext.request.contextPath}/create" method="get">
+    <input type="submit" value="Add user">
+</form>
 </body>
 </html>

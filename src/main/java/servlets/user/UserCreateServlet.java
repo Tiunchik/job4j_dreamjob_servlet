@@ -34,6 +34,10 @@ public class UserCreateServlet extends HttpServlet {
      */
     private static final ValidateService LOGIC = ValidateService.LOGIC;
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/Pages/create.jsp").forward(req, resp);
+    }
 
     /**
      * add user to db
@@ -56,7 +60,7 @@ public class UserCreateServlet extends HttpServlet {
             temp.setCreateDate(date);
             LOGIC.add(temp);
         }
-        resp.sendRedirect(req.getContextPath() + "/index.jsp");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 
     private Map<String, String> findParametrs(HttpServletRequest req) {

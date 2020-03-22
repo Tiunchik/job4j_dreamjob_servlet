@@ -30,7 +30,7 @@
     <label for="id">User ID</label>
     <input type="number" name="id" id="id" value="">
     <br>
-    <input type="submit" value="Create" formaction="<%=request.getContextPath()%>/create" formmethod="post">
+    <input type="submit" value="Create" formaction="${pageContext.request.contextPath}/create" formmethod="post">
 </form>
 </body>
 </html>

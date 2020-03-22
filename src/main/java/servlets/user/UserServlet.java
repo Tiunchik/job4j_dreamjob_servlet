@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -32,6 +33,13 @@ public class UserServlet extends HttpServlet {
      */
     private static final ValidateService LOGIC = ValidateService.LOGIC;
 
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("users", LOGIC.findALL());
+        req.getRequestDispatcher("/WEB-INF/Pages/UserList.jsp").forward(req, resp);
+    }
+
     /**
      * add user to list of users that is consisted into DB
      *
@@ -48,7 +56,7 @@ public class UserServlet extends HttpServlet {
             User temp = new User();
             temp.setId(Integer.parseInt(s.get("id")));
             LOGIC.delete(temp);
-            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            resp.sendRedirect(req.getContextPath() + "/");
         }
     }
 
