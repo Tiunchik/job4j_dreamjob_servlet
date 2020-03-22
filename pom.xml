@@ -45,7 +45,7 @@
             <properties>
                 <db.url>jdbc:postgresql://localhost/servletuserdb</db.url>
                 <db.username>postgres</db.username>
-                <db.password>password</db.password>
+                <db.password></db.password>
                 <db.driver>org.postgresql.Driver</db.driver>
             </properties>
         </profile>
