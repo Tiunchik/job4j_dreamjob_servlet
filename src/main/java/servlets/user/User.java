@@ -31,6 +31,20 @@ public class User {
 
     private Date createDate;
 
+    public User() {
+    }
+
+    public User(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public User(int id, String name, Date createDate) {
+        this.id = id;
+        this.name = name;
+        this.createDate = createDate;
+    }
+
     public int getId() {
         return id;
     }
