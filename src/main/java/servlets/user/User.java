@@ -9,9 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
- * Class User - 
+ * Class User -
  *
  * @author Maksim Tiunchik (senebh@gmail.com)
  * @version 0.1
@@ -68,5 +69,22 @@ public class User {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
