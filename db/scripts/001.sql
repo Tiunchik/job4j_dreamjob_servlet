@@ -3,4 +3,5 @@ CREATE TABLE IF NOT EXISTS USERTABLE (
                     username varchar(100),
                     userlogin varchar(100) DEFAULT '',
                     useremail varchar(100) DEFAULT '',
+                    userimage varchar(255),
                     usercrdate date);

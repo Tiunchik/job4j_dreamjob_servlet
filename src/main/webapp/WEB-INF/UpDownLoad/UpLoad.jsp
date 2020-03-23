@@ -1,12 +1,7 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Tiunchik
-  Date: 23.03.2020
-  Time: 10:17
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ page language="java" pageEncoding="UTF-8" session="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>Upload</title>
     <meta charset="utf-8">
@@ -14,20 +9,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-    <style>
-        body {
-            font-size: 120%;
-            font-family: "Times New Roman", sans-serif;
-            color: white;
-            background-color: #333333;
-            margin-left: 30%;
-            margin-right: 30%;
-            border: dotted lightblue;
-        }
-    </style>
 </head>
 <body>
+
 <div class="container">
     <table class="table">
         <thead>
@@ -41,8 +25,7 @@
             <tr valign="top">
                 <td><a href="${pageContext.servletContext.contextPath}/download?name=${image}">Download</a></td>
                 <td>
-                    <img src="${pageContext.servletContext.contextPath}/download?name=${image}" width="100px"
-                         height="100px"/>
+                    <img src="${pageContext.servletContext.contextPath}/download?name=${image}" width="100px" height="100px"/>
                 </td>
             </tr>
         </c:forEach>
@@ -56,5 +39,6 @@
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </div>
+
 </body>
 </html>

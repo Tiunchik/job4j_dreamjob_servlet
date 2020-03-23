@@ -71,11 +71,12 @@ public class DBStore implements Store {
     public void add(User user) {
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement st = connection
-                     .prepareStatement("INSERT INTO USERTABLE (userid, username, usercrdate) VALUES (?,?,?)")) {
+                     .prepareStatement("INSERT INTO USERTABLE (userid, username, usercrdate, userimage) VALUES (?,?,?,?)")) {
             st.setInt(1, user.getId());
             st.setString(2, user.getName());
             Date date = new Date(user.getCreateDate().getTime());
             st.setDate(3, date);
+            st.setString(4, user.getImage());
             st.execute();
         } catch (SQLException e) {
             LOG.error("Add method SQL ecxeption", e);
@@ -91,11 +92,12 @@ public class DBStore implements Store {
     public void update(User user) {
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement st = connection
-                     .prepareStatement("UPDATE USERTABLE SET username=?, userlogin=?, useremail=? WHERE userid=? ")) {
+                     .prepareStatement("UPDATE USERTABLE SET username=?, userlogin=?, useremail=?, userimage=? WHERE userid=? ")) {
             st.setString(1, user.getName());
             st.setString(2, user.getLogin());
             st.setString(3, user.getEmail());
             st.setInt(4, user.getId());
+            st.setString(5, user.getImage());
             st.execute();
         } catch (SQLException e) {
             LOG.error("Add method SQL ecxeption", e);
@@ -137,6 +139,7 @@ public class DBStore implements Store {
                 user.setLogin(answer.getString("userlogin"));
                 user.setEmail(answer.getString("useremail"));
                 user.setCreateDate(answer.getDate("usercrdate"));
+                user.setImage(answer.getString("userimage"));
                 return user;
             }
         } catch (SQLException e) {
@@ -164,6 +167,7 @@ public class DBStore implements Store {
                 user.setLogin(answer.getString("userlogin"));
                 user.setEmail(answer.getString("useremail"));
                 user.setCreateDate(answer.getDate("usercrdate"));
+                user.setImage(answer.getString("userimage"));
                 list.add(user);
             }
         } catch (SQLException e) {
@@ -196,6 +200,7 @@ public class DBStore implements Store {
                     + "username varchar(100), "
                     + "userlogin varchar(100) DEFAULT '',"
                     + "useremail varchar(100) DEFAULT '',"
+                    + "userimage varchar(255),"
                     + "usercrdate date"
                     + ")");
         } catch (SQLException e) {

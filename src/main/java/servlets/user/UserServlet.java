@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -49,14 +52,26 @@ public class UserServlet extends HttpServlet {
      * @throws IOException
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         //имхо это надо делать через стратегию, но сейчас и switch покатит
         Map<String, String> s = findParametrs(req);
-        if (s.containsKey("id") && s.get("action").equals("delete")) {
-            User temp = new User();
-            temp.setId(Integer.parseInt(s.get("id")));
-            LOGIC.delete(temp);
-            resp.sendRedirect(req.getContextPath() + "/");
+        try {
+            if (s.containsKey("id") && s.get("action").equals("delete")) {
+                User temp = LOGIC.findByID(new User(Integer.parseInt(s.get("id")), "tempuser"));
+                Path file = Paths.get(temp.getImage());
+                if (Files.exists(file)) {
+                    Files.delete(file);
+                }
+                LOGIC.delete(temp);
+            }
+        } catch (IOException e) {
+            LOG.error("File delete error", e);
+        } finally {
+            try {
+                resp.sendRedirect(req.getContextPath() + "/");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

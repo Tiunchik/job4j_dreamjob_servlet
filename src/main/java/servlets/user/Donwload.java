@@ -3,7 +3,7 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets.load;
+package servlets.user;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,12 +27,12 @@ public class Donwload extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(Donwload.class.getName());
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         resp.setContentType("name=" + name);
         resp.setContentType("image/png");
         resp.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
-        File file = new File("images" + File.separator + name);
+        File file = new File(name);
         try (FileInputStream in = new FileInputStream(file)) {
             resp.getOutputStream().write(in.readAllBytes());
         }

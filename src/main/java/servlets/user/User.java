@@ -31,6 +31,8 @@ public class User {
 
     private Date createDate;
 
+    private String image;
+
     public User() {
     }
 
@@ -83,6 +85,14 @@ public class User {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override

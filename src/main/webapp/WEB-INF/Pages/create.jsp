@@ -22,7 +22,8 @@
     </style>
 </head>
 <body>
-<form>
+
+<form action="${pageContext.request.contextPath}/create" method="post">
     <br>
     <label for="name">User name</label>
     <input type="text" name="name" id="name" value="">
@@ -30,7 +31,19 @@
     <label for="id">User ID</label>
     <input type="number" name="id" id="id" value="">
     <br>
-    <input type="submit" value="Create" formaction="${pageContext.request.contextPath}/create" formmethod="post">
+    <input type="hidden" name="image" id="image" value="${pageContext.servletContext.contextPath}/download?name=${image}">
+    <input type="submit" value="Create">
 </form>
+
+<form action="${pageContext.request.contextPath}/load"  method="post" enctype="multipart/form-data">
+    <label for="file">Photo</label>
+    <br>
+    <img src="${pageContext.servletContext.contextPath}/download?name=${image}" width="200px" height="200px" alt=""/>
+    <br>
+    <input type="file" name="file" id="file" value="">
+    <br>
+    <input type="submit" value="Add photo">
+</form>
+
 </body>
 </html>

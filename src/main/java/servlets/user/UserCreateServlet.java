@@ -5,19 +5,20 @@
  */
 package servlets.user;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * Class UserCreateServlet - create new user and add to database
@@ -50,14 +51,28 @@ public class UserCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, String> s = findParametrs(req);
+        User temp = new User();
         if (s.containsKey("id") && s.containsKey("name")) {
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR_OF_DAY, 0);
             Date date = today.getTime();
-            User temp = new User();
             temp.setId(Integer.parseInt(s.get("id")));
             temp.setName(s.get("name"));
             temp.setCreateDate(date);
+            if (s.get("image").contains("tempfile")) {
+                Path folders = Paths.get("bin/images");
+                if (!Files.exists(folders)) {
+                    Files.createDirectories(folders);
+                }
+                Path file = Paths.get("images" + File.separator + "tempfile.jpg");
+                String path = folders + File.separator + s.get("id") + ".jpg";
+                Path userFile = Paths.get(path);
+                OutputStream out = Files.newOutputStream(userFile);
+                InputStream in = Files.newInputStream(file);
+                out.write(in.readAllBytes());
+                out.flush();
+                temp.setImage(path);
+            }
             LOGIC.add(temp);
         }
         resp.sendRedirect(req.getContextPath() + "/");

@@ -1,15 +1,15 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Tiunchik
-  Date: 21.03.2020
-  Time: 18:55
+  Date: 23.03.2020
+  Time: 10:58
   To change this template use File | Settings | File Templates.
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>List of users</title>
+    <title>Add Images</title>
     <style>
         body {
             font-size: 120%;
@@ -43,32 +43,23 @@
 <table>
     <tr>
         <th>ID number</th>
-        <th >Name</th>
+        <th>Name</th>
         <th>login</th>
         <th>E-mail</th>
         <th>Creation Date</th>
-        <th>Photo</th>
         <th>Control buttons</th>
     </tr>
     <tr>
-        <jsp:useBean id="users" scope="request" type="java.util.List"/>
         <c:forEach items="${users}" var="user">
-        <td>${user.id}</td>
-        <td>${user.name}</td>
-        <td>${user.login}</td>
-        <td>${user.email}</td>
-        <td>${user.createDate}</td>
-        <td><img src="${pageContext.servletContext.contextPath}/download?name=bin/images/${user.id}.jpg" width="100px"
-            height="100px" alt=""/></td>
+        <td><c:out value="${user.id}"></c:out></td>
+        <td><c:out value="${user.name}"></c:out></td>
+        <td><c:out value="${user.login}"></c:out></td>
+        <td><c:out value="${user.email}"></c:out></td>
+        <td><c:out value="${user.createDate}"></c:out></td>
         <td>
             <form action="${pageContext.request.contextPath}/edit?" method="get">
-                <input type="hidden" name="id" value="${user.id}">
+                <input type="hidden" name="id" value="<c:out value="${user.id}"></c:out>">
                 <input type="submit" value="Change">
-            </form>
-            <form action="${pageContext.request.contextPath}/" method="post">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="${user.id}">
-                <input type="submit" value="Delete">
             </form>
         </td>
     </tr>
@@ -77,10 +68,6 @@
 <br>
 <form action="${pageContext.request.contextPath}/create" method="get">
     <input type="submit" value="Add user">
-</form>
-<br>
-<form action="${pageContext.request.contextPath}/image" method="get">
-    <input type="submit" value="Add images">
 </form>
 </body>
 </html>
