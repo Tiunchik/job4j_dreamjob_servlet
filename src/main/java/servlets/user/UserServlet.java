@@ -39,6 +39,9 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession ses = req.getSession();
+        Role role = (Role) ses.getAttribute("role");
+        req.setAttribute("role", role);
         req.setAttribute("users", LOGIC.findALL());
         req.getRequestDispatcher("/WEB-INF/Pages/UserList.jsp").forward(req, resp);
     }
@@ -58,9 +61,11 @@ public class UserServlet extends HttpServlet {
         try {
             if (s.containsKey("id") && s.get("action").equals("delete")) {
                 User temp = LOGIC.findByID(new User(Integer.parseInt(s.get("id")), "tempuser"));
-                Path file = Paths.get(temp.getImage());
-                if (Files.exists(file)) {
-                    Files.delete(file);
+                if (temp.getImage() != null) {
+                    Path file = Paths.get(temp.getImage());
+                    if (Files.exists(file)) {
+                        Files.delete(file);
+                    }
                 }
                 LOGIC.delete(temp);
             }

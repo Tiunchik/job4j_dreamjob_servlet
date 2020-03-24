@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="servlets.user.User" %>
 <%@ page import="servlets.user.ValidateService" %><%--
   Created by IntelliJ IDEA.
@@ -24,15 +25,24 @@
     }
 </style>
 <body>
+<jsp:useBean id="user" scope="request" type="servlets.user.User"/>
+
+<jsp:useBean id="userrole" scope="request" type="servlets.user.Role"/>
+
+<jsp:useBean id="role" scope="request" type="servlets.user.Role"/>
 
 <form action="${pageContext.request.contextPath}/edit?" method="post">
-    ID: <input type="number" name="id" value="<c:out value="${user.id}"></c:out>" readonly>
-    <br>
-    Name: <input type="text" name="name" value="<c:out value="${user.name}"></c:out>">
-    <br>
-    Login: <input type="text" name="login" value="<c:out value="${user.login}"></c:out>">
-    <br>
-    Email: <input type="text" name="email" value="<c:out value="${user.email}"></c:out>">
+    <p>ID: <input type="number" name="id" value="${user.id}" readonly></p>
+    <p>Name: <input type="text" name="name" value="${user.name}"></p>
+    <p>Login: <input type="text" name="login" value="${user.login}"></p>
+    <p>Email: <input type="text" name="email" value="${user.email}"></p>
+    <c:if test="${role.role.equals('admin')}">
+        <p>Role:<select size="1" name="role" id="role" required>
+            <option value="admin">Administrator</option>
+            <option value="user">User</option>
+        </select></p>
+    </c:if>
+    <p>Password: <input type="text" name="password" value="${userrole.password}"></p>
     <br>
     <input type="submit" value="Change">
 </form>

@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -35,7 +36,18 @@ public class UserUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String s = req.getParameter("id");
-        req.setAttribute("user", LOGIC.findByID(new User(Integer.parseInt(s), "test")));
+        User user = LOGIC.findByID(new User(Integer.parseInt(s), "test"));
+        req.setAttribute("user", user);
+        Role role = LOGIC.getRole(user);
+
+        //put role of updated user
+        req.setAttribute("userrole", role);
+
+        //put role of this session
+        HttpSession ses = req.getSession();
+        role = (Role) ses.getAttribute("role");
+        req.setAttribute("role", role);
+
         req.getRequestDispatcher("/WEB-INF/Pages/update.jsp").forward(req, resp);
     }
 
@@ -53,10 +65,13 @@ public class UserUpdateServlet extends HttpServlet {
         if (s.containsKey("id")) {
             User temp = new User();
             temp.setId(Integer.parseInt(s.get("id")));
+            temp = LOGIC.findByID(temp);
             temp.setLogin(s.get("login"));
             temp.setEmail(s.get("email"));
             temp.setName(s.get("name"));
             LOGIC.update(temp);
+            Role role = new Role(temp, s.get("password"), s.get("role"));
+            LOGIC.saveRole(role);
         }
         resp.sendRedirect(req.getContextPath() + "/");
 

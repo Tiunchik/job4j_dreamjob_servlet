@@ -71,12 +71,13 @@ public class DBStore implements Store {
     public void add(User user) {
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement st = connection
-                     .prepareStatement("INSERT INTO USERTABLE (userid, username, usercrdate, userimage) VALUES (?,?,?,?)")) {
+                     .prepareStatement("INSERT INTO USERTABLE (userid, username, userlogin, usercrdate, userimage) VALUES (?,?,?,?,?)")) {
             st.setInt(1, user.getId());
             st.setString(2, user.getName());
+            st.setString(3, user.getLogin());
             Date date = new Date(user.getCreateDate().getTime());
-            st.setDate(3, date);
-            st.setString(4, user.getImage());
+            st.setDate(4, date);
+            st.setString(5, user.getImage());
             st.execute();
         } catch (SQLException e) {
             LOG.error("Add method SQL ecxeption", e);
@@ -96,8 +97,8 @@ public class DBStore implements Store {
             st.setString(1, user.getName());
             st.setString(2, user.getLogin());
             st.setString(3, user.getEmail());
-            st.setInt(4, user.getId());
-            st.setString(5, user.getImage());
+            st.setString(4, user.getImage());
+            st.setInt(5, user.getId());
             st.execute();
         } catch (SQLException e) {
             LOG.error("Add method SQL ecxeption", e);
@@ -203,8 +204,48 @@ public class DBStore implements Store {
                     + "userimage varchar(255),"
                     + "usercrdate date"
                     + ")");
+            st.execute("CREATE TABLE IF NOT EXISTS USERROLLS ("
+                    + "userid_role integer REFERENCES usertable (userid) ON DELETE CASCADE, "
+                    + "userrole varchar(10) CHECK ((userrole = 'user') OR (userrole = 'admin')), "
+                    + "userpassword varchar(20), "
+                    + "UNIQUE(userid_role))");
         } catch (SQLException e) {
             LOG.error("create TB method SQL ecxeption", e);
         }
+    }
+
+    public void saveRole(Role role) {
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement st = connection
+                     .prepareStatement("INSERT INTO USERROLLS (userid_role, userrole, userpassword) VALUES (?,?,?)"
+                             + "ON CONFLICT (userid_role) DO UPDATE SET userrole = ?, userpassword = ? where USERROLLS.userid_role = ?")) {
+            st.setInt(1, role.getUser().getId());
+            st.setString(2, role.getRole());
+            st.setString(3, role.getPassword());
+
+            st.setString(4, role.getRole());
+            st.setString(5, role.getPassword());
+            st.setInt(6, role.getUser().getId());
+            st.execute();
+        } catch (SQLException e) {
+            LOG.error("Add Role SQL ecxeption", e);
+        }
+    }
+
+    public Role getRole(User user) {
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement st = connection
+                     .prepareStatement("SELECT * FROM USERROLLS WHERE userid_role=?")) {
+            st.setInt(1, user.getId());
+            ResultSet answer = st.executeQuery();
+            if (answer.next()) {
+                return new Role(findByID(user),
+                        answer.getString("userpassword"),
+                        answer.getString("userrole"));
+            }
+        } catch (SQLException e) {
+            LOG.error("Get Role SQL ecxeption", e);
+        }
+        return null;
     }
 }

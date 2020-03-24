@@ -24,7 +24,7 @@ public enum ValidateService {
 
     private static final Logger LOG = LogManager.getLogger(ValidateService.class.getName());
 
-    private static final Store STORE = DBStore.getInstance();
+    private static final DBStore STORE = DBStore.getInstance();
 
     public void add(User user) {
         if (findByID(user) == null) {
@@ -54,5 +54,12 @@ public enum ValidateService {
         return STORE.findALL();
     }
 
+    public void saveRole(Role role) {
+        STORE.saveRole(role);
+    }
+
+    public Role getRole(User user) {
+        return STORE.getRole(user);
+    }
 }
 

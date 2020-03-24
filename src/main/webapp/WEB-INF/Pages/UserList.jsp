@@ -43,7 +43,7 @@
 <table>
     <tr>
         <th>ID number</th>
-        <th >Name</th>
+        <th>Name</th>
         <th>login</th>
         <th>E-mail</th>
         <th>Creation Date</th>
@@ -59,18 +59,27 @@
         <td>${user.email}</td>
         <td>${user.createDate}</td>
         <td><img src="${pageContext.servletContext.contextPath}/download?name=bin/images/${user.id}.jpg" width="100px"
-            height="100px" alt=""/></td>
+                 height="100px" alt=""/></td>
         <td>
-            <form action="${pageContext.request.contextPath}/edit?" method="get">
-                <input type="hidden" name="id" value="${user.id}">
-                <input type="submit" value="Change">
-            </form>
-            <form action="${pageContext.request.contextPath}/" method="post">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="${user.id}">
-                <input type="submit" value="Delete">
-            </form>
-        </td>
+            <jsp:useBean id="role" scope="request" type="servlets.user.Role"/>
+            <c:if test="${role.role.equals('user') && user.equals(role.user)}">
+                <form action="${pageContext.request.contextPath}/edit?" method="get">
+                    <input type="hidden" name="id" value="${user.id}">
+                    <input type="submit" value="Change">
+                </form>
+            </c:if>
+            <c:if test="${role.role.equals('admin')}">
+                <form action="${pageContext.request.contextPath}/edit?" method="get">
+                    <input type="hidden" name="id" value="${user.id}">
+                    <input type="submit" value="Change">
+                </form>
+                <form action="${pageContext.request.contextPath}/" method="post">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="${user.id}">
+                    <input type="submit" value="Delete">
+                </form>
+            </c:if>
+           </td>
     </tr>
     </c:forEach>
 </table>
@@ -79,8 +88,10 @@
     <input type="submit" value="Add user">
 </form>
 <br>
-<form action="${pageContext.request.contextPath}/image" method="get">
-    <input type="submit" value="Add images">
+<form action="${pageContext.request.contextPath}/logout" method="post">
+    <input type="submit" value="Logout">
 </form>
+
 </body>
+
 </html>

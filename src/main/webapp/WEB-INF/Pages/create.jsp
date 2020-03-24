@@ -26,10 +26,10 @@
 <form action="${pageContext.request.contextPath}/create" method="post">
     <br>
     <label for="name">User name</label>
-    <input type="text" name="name" id="name" value="">
+    <input type="text" name="name" id="name" value="" required>
     <br>
     <label for="id">User ID</label>
-    <input type="number" name="id" id="id" value="">
+    <input type="number" name="id" id="id" value="" required>
     <br>
     <input type="hidden" name="image" id="image" value="${pageContext.servletContext.contextPath}/download?name=${image}">
     <input type="submit" value="Create">

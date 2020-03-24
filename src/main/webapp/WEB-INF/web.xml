@@ -8,7 +8,7 @@
     <servlet>
         <servlet-name>EchoServlet</servlet-name>
         <servlet-class>servlets.first.EchoServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -16,10 +16,31 @@
         <url-pattern>/echo</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>Filter</filter-name>
+        <filter-class>servlets.filter.Filter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Filter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>SingIn</servlet-name>
+        <servlet-class>servlets.filter.SignInServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SingIn</servlet-name>
+        <url-pattern>/singin</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>UserServlet</servlet-name>
         <servlet-class>servlets.user.UserServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -30,7 +51,7 @@
     <servlet>
         <servlet-name>UserCreateServlet</servlet-name>
         <servlet-class>servlets.user.UserCreateServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -41,7 +62,7 @@
     <servlet>
         <servlet-name>UserUpdateServlet</servlet-name>
         <servlet-class>servlets.user.UserUpdateServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet-mapping>
@@ -49,11 +70,6 @@
         <url-pattern>/edit</url-pattern>
     </servlet-mapping>
 
-       <servlet>
-        <servlet-name>Images</servlet-name>
-        <servlet-class>servlets.user.UserLoadImage</servlet-class>
-        <load-on-startup>3</load-on-startup>
-    </servlet>
 
     <servlet-mapping>
         <servlet-name>Download</servlet-name>
@@ -63,11 +79,29 @@
     <servlet>
         <servlet-name>Download</servlet-name>
         <servlet-class>servlets.user.Donwload</servlet-class>
-        <load-on-startup>3</load-on-startup>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Images</servlet-name>
+        <servlet-class>servlets.user.UserLoadImage</servlet-class>
+        <load-on-startup>4</load-on-startup>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>Images</servlet-name>
         <url-pattern>/load</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>servlets.user.UserRoles</servlet-class>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 </web-app>
