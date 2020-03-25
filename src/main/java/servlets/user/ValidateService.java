@@ -19,12 +19,16 @@ import java.util.List;
  * @since 19.03.2020
  */
 @ThreadSafe
-public enum ValidateService {
+public enum ValidateService implements Validate {
     LOGIC;
 
     private static final Logger LOG = LogManager.getLogger(ValidateService.class.getName());
 
     private static final DBStore STORE = DBStore.getInstance();
+
+    public static Validate getInstance() {
+        return LOGIC;
+    }
 
     public void add(User user) {
         if (findByID(user) == null) {

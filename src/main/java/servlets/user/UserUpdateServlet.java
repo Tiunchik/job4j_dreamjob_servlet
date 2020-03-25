@@ -31,7 +31,7 @@ public class UserUpdateServlet extends HttpServlet {
     /**
      * logic block, have connection to DB
      */
-    private static final ValidateService LOGIC = ValidateService.LOGIC;
+    private static final Validate LOGIC = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
