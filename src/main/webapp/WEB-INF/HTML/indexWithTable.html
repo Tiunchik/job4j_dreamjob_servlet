@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function validate() {
+            var id = $('#id').val();
+            var table = document.getElementById("iterable_table");
+            for (var i = 0; i < table.rows.length; i++) {
+                if (table.rows[i].cells[0].innerHTML == id) {
+                    alert("You fill in incorrect ID, please fill in new number")
+                }
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="container">
@@ -17,11 +28,11 @@
 
 <div class="container">
     <h2>Change user information</h2>
-    <form class="form-horizontal" action="${pageContext.request.contextPath}/edit?" method="post">
+    <form class="form-horizontal">
         <div class="form-group">
             <label class="control-label col-sm-2" for="id">Employee number:</label>
             <div class="col-sm-10">
-                <input type="number" class="form-control" id="id" name="id" readonly>
+                <input type="number" class="form-control" id="id" name="id">
             </div>
         </div>
         <div class="form-group">
@@ -33,27 +44,29 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Employee login</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="login" placeholder="Enter employee login" name="login" required>
+                <input type="text" class="form-control" id="login" placeholder="Enter employee login" name="login"
+                       required>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="sel1">Select employee role</label>
             <div class="col-sm-10">
-            <select class="form-control" id="sel1">
-                <option value="admin">Administrator</option>
-                <option value="user">User</option>
-            </select>
+                <select class="form-control" id="sel1">
+                    <option value="admin">Administrator</option>
+                    <option value="user">User</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="passwrod">Employee password</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="passwrod" placeholder="Enter employee passwrod" name="passwrod" required>
+                <input type="password" class="form-control" id="passwrod" placeholder="Enter employee passwrod"
+                       name="passwrod" required>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Execute</button>
+                <button type="button" class="btn btn-default" onclick="validate()">Execute</button>
             </div>
         </div>
     </form>
@@ -62,7 +75,7 @@
 <div class="container">
     <h2>Table of employee</h2>
     <p>table don't consieder information about emplyee's access rights</p>
-    <table class="table table-striped">
+    <table class="table table-striped" id="iterable_table">
         <thead>
         <tr>
             <th>Number</th>
