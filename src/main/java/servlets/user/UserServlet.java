@@ -44,6 +44,7 @@ public class UserServlet extends HttpServlet {
         req.setAttribute("role", role);
         req.setAttribute("users", LOGIC.findALL());
         req.getRequestDispatcher("/WEB-INF/Pages/UserList.jsp").forward(req, resp);
+        List<Integer> expected = new ArrayList<>(List.of(1, 3, 4));
     }
 
     /**

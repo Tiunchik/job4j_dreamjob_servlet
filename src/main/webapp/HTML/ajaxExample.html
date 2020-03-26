@@ -1,0 +1,51 @@
+<!doctype html >
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <allow-navigation href="http://localhost:8080/*"/>
+    <title>AJAX</title>
+</head>
+<body>
+
+<script>
+    function sendGreeting() {
+        $.ajax({
+            url: 'http://127.0.0.1:8080/servlets/greet',
+            type: 'GET',
+            data: 'name=' + $('#exampleInputEmail1').val(),
+            dataType: 'text',
+            headers: {'Access-Control-Allow-Origin': '*'}
+        }).done(function (data) {
+            alert(data);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    }
+</script>
+
+<div class="container">
+    <form>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                   placeholder="Enter email" value="">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="sendGreeting()">Submit</button>
+    </form>
+</div>
+<div class="container">
+    <form action="http://localhost:8080/servlets/greet">
+        <div class="form-group">
+            <label for="exampleInputEmail2">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp"
+                   placeholder="Enter email" value="" name="name">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>

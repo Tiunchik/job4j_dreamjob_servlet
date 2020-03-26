@@ -5,6 +5,18 @@
 		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+<!--
+    <filter>
+        <filter-name>Filter</filter-name>
+        <filter-class>servlets.filter.Filter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Filter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+
     <servlet>
         <servlet-name>EchoServlet</servlet-name>
         <servlet-class>servlets.first.EchoServlet</servlet-class>
@@ -15,16 +27,6 @@
         <servlet-name>EchoServlet</servlet-name>
         <url-pattern>/echo</url-pattern>
     </servlet-mapping>
-
-    <filter>
-        <filter-name>Filter</filter-name>
-        <filter-class>servlets.filter.Filter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>Filter</filter-name>
-        <url-pattern>*</url-pattern>
-    </filter-mapping>
 
     <servlet>
         <servlet-name>SingIn</servlet-name>
@@ -93,7 +95,6 @@
         <url-pattern>/load</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
         <servlet-name>logout</servlet-name>
         <servlet-class>servlets.user.UserRoles</servlet-class>
@@ -103,5 +104,16 @@
     <servlet-mapping>
         <servlet-name>logout</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+-->
+    <servlet>
+        <servlet-name>GreetingServlet</servlet-name>
+        <servlet-class>servlets.ajax.GreetingsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GreetingServlet</servlet-name>
+        <url-pattern>/greet</url-pattern>
     </servlet-mapping>
 </web-app>
