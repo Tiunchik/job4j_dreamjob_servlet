@@ -118,6 +118,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>JsonServletExample</servlet-name>
+        <servlet-class>servlets.json.JsonServletExample</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JsonServletExample</servlet-name>
+        <url-pattern>/json</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>PageStartServer</servlet-name>
         <servlet-class>servlets.ajax.PageStartServer</servlet-class>
     </servlet>
