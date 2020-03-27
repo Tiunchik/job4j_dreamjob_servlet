@@ -20,6 +20,7 @@
             header: {'Access-Control-Allow-Origin': '*'}
         }).done(function (data) {
             document.getElementById("out").innerHTML = data;
+            document.getElementById("exampleInputEmail1").value = "";
         }).fail(function (err) {
             console.log(err);
         });

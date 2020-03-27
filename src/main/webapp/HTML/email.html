@@ -1,0 +1,49 @@
+<!doctype html >
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <title>AJAX</title>
+</head>
+<body>
+<script>
+    function sendGreeting() {
+        $.ajax({
+            url: 'http://localhost:8080/servlets/start2',
+            type: 'POST',
+            data: 'name=' + $('#email').val(),
+            dataType: 'text',
+        }).done(function (data) {
+            $('#email').trigger('reset');
+            alert(data);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    }
+</script>
+<div class="container">
+    <div class="row">
+        <form>
+            <hr/>
+            <div class="float-md-left" style="width: 500px">
+                <div class="form-group">
+                    <label for="email" class="sr-only"></label>
+                    <input type="email" class="form-control" id="email" placeholder="Введите адрес почты" value="">
+                </div>
+            </div>
+            <div class="float-md-right">
+                <div class="form-group">
+                    <button class="btn btn-primary btn-md" style="margin-left: 5px" type="submit"
+                            onclick="sendGreeting()">Добавить
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
