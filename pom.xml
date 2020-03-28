@@ -79,6 +79,13 @@
             <version>1.1.2</version>
         </dependency>
 
+            <!-- library for simple JSON parsing -->
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+
             <!-- dependencies for searchink links on files gotten from jsp page with data request-->
             <dependency>
                 <groupId>commons-fileupload</groupId>

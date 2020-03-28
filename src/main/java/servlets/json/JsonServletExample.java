@@ -5,15 +5,22 @@
  */
 package servlets.json;
 
+import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class JsonServletExample -
@@ -32,10 +39,16 @@ public class JsonServletExample extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (PrintWriter out = resp.getWriter()) {
-            String login = req.getParameter("login");
-            String password = req.getParameter("password");
-            resp.setStatus(200);
+        try (PrintWriter out = resp.getWriter();
+             BufferedReader br = req.getReader()) {
+        StringBuilder sb = new StringBuilder();
+        String str;
+        while ((str = br.readLine()) != null) {
+            sb.append(str);
+        }
+            JSONObject parameters = (JSONObject) new JSONParser().parse(sb.toString());
+            String login = (String) parameters.get("login");
+            String password = (String) parameters.get("password");
             resp.setContentType("text/plain");
             if (login.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin")) {
                 out.write("message: all ok");
@@ -43,6 +56,8 @@ public class JsonServletExample extends HttpServlet {
                 out.write("message: Incorrect login and password");
             }
             out.flush();
+        } catch (ParseException | IOException e) {
+            LOG.error("Post JsonServletExeption", e);
         }
     }
 }

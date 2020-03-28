@@ -9,13 +9,17 @@
 </head>
 <script>
     function sendPost() {
+
+        var send = {
+            'login': $('#login').val(),
+            'password': $('#password').val()
+        };
         $.ajax({
             url: 'http://localhost:8080/servlets/json',
             method: 'POST',
-            data: {
-                'login': $('#login').val(),
-                'password': $('#password').val()
-            },
+            contentType: 'application/json',
+            data: JSON.stringify(send),
+            dataType: 'text'
         }).done(function (data) {
             document.getElementById("out").innerHTML = data;
         }).fail(function (data) {
