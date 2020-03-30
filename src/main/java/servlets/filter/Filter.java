@@ -35,17 +35,22 @@ public class Filter implements javax.servlet.Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = ((HttpServletRequest) req);
-        if (request.getRequestURI().contains("/login")) {
-            chain.doFilter(req, resp);
-        } else {
-            HttpServletResponse response = ((HttpServletResponse) resp);
-            HttpSession session = request.getSession();
-            if (session.getAttribute("role") == null) {
-                response.sendRedirect(String.format("%s/login", request.getContextPath()));
-                return;
-            }
-            chain.doFilter(req, resp);
+        HttpServletResponse response = ((HttpServletResponse) resp);
+
+        System.out.println("CORSFilter HTTP Request: " + request.getMethod());
+
+        // Authorize (allow) all domains to consume the content
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
+        response.addHeader("Access-Control-Allow-Headers", "content-type, json");
+
+        // For HTTP OPTIONS verb/method reply with ACCEPTED status code -- per CORS handshake
+        String s = request.getMethod();
+        if (request.getMethod().equals("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            return;
         }
+        chain.doFilter(req, resp);
     }
 
     @Override
