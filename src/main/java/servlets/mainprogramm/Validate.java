@@ -4,7 +4,7 @@
  * @author Maksim Tiunchik
  */
 
-package servlets.user;
+package servlets.mainprogramm;
 
 import java.util.List;
 

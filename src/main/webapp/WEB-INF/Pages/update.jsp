@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="servlets.user.User" %>
-<%@ page import="servlets.user.ValidateService" %><%--
+<%@ page import="servlets.mainprogramm.User" %>
+<%@ page import="servlets.mainprogramm.ValidateService" %><%--
   Created by IntelliJ IDEA.
   User: Tiunchik
   Date: 21.03.2020
@@ -25,11 +25,11 @@
     }
 </style>
 <body>
-<jsp:useBean id="user" scope="request" type="servlets.user.User"/>
+<jsp:useBean id="user" scope="request" type="servlets.mainprogramm.User"/>
 
-<jsp:useBean id="userrole" scope="request" type="servlets.user.Role"/>
+<jsp:useBean id="userrole" scope="request" type="servlets.mainprogramm.Role"/>
 
-<jsp:useBean id="role" scope="request" type="servlets.user.Role"/>
+<jsp:useBean id="role" scope="request" type="servlets.mainprogramm.Role"/>
 
 <form action="${pageContext.request.contextPath}/edit?" method="post">
     <p>ID: <input type="number" name="id" value="${user.id}" readonly></p>

@@ -61,7 +61,7 @@
         <td><img src="${pageContext.servletContext.contextPath}/download?name=bin/images/${user.id}.jpg" width="100px"
                  height="100px" alt=""/></td>
         <td>
-            <jsp:useBean id="role" scope="request" type="servlets.user.Role"/>
+            <jsp:useBean id="role" scope="request" type="servlets.mainprogramm.Role"/>
             <c:if test="${role.role.equals('user') && user.equals(role.user)}">
                 <form action="${pageContext.request.contextPath}/edit?" method="get">
                     <input type="hidden" name="id" value="${user.id}">
