@@ -3,7 +3,7 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets.user;
+package servlets.mainprogramm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

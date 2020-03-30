@@ -3,11 +3,12 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets.user;
+package servlets.mainprogramm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -29,9 +30,13 @@ public class User {
 
     private String email;
 
-    private Date createDate;
+    private Timestamp createDate;
 
     private String image;
+
+    private String city;
+
+    private String country;
 
     public User() {
     }
@@ -41,7 +46,7 @@ public class User {
         this.name = name;
     }
 
-    public User(int id, String name, Date createDate) {
+    public User(int id, String name, Timestamp createDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -79,11 +84,11 @@ public class User {
         this.email = email;
     }
 
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
@@ -93,6 +98,22 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Override

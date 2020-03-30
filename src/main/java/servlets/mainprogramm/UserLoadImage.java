@@ -3,7 +3,7 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets.user;
+package servlets.mainprogramm;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -35,6 +35,7 @@ public class UserLoadImage extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //prepare file
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletContext servletContext = this.getServletConfig().getServletContext();
         File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -49,15 +50,14 @@ public class UserLoadImage extends HttpServlet {
             for (FileItem item : items) {
                 if (!item.isFormField()) {
                     File file = new File(folder + File.separator + "tempfile.jpg");
+                    String s = file.getAbsolutePath();
                     try (FileOutputStream out = new FileOutputStream(file)) {
                         out.write(item.getInputStream().readAllBytes());
                     }
-                    req.setAttribute("image", "images/" + file.getName());
                 }
             }
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-        req.getRequestDispatcher("/WEB-INF/Pages/create.jsp").forward(req, resp);
     }
 }

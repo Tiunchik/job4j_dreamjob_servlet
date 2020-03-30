@@ -3,7 +3,7 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets.user;
+package servlets.mainprogramm;
 
 import net.jcip.annotations.ThreadSafe;
 import org.apache.logging.log4j.LogManager;
@@ -64,6 +64,10 @@ public enum ValidateService implements Validate {
 
     public Role getRole(User user) {
         return STORE.getRole(user);
+    }
+
+    public List<String> getCity() {
+        return DBStore.getInstance().getCity();
     }
 }
 

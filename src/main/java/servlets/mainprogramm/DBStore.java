@@ -3,7 +3,7 @@
  *
  * @author Maksim Tiunchik
  */
-package servlets.user;
+package servlets.mainprogramm;
 
 import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,8 +76,7 @@ public class DBStore implements Store {
             st.setInt(1, user.getId());
             st.setString(2, user.getName());
             st.setString(3, user.getLogin());
-            Date date = new Date(user.getCreateDate().getTime());
-            st.setDate(4, date);
+            st.setTimestamp(4, user.getCreateDate());
             st.setString(5, user.getImage());
             st.execute();
         } catch (SQLException e) {
@@ -93,12 +93,15 @@ public class DBStore implements Store {
     public void update(User user) {
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement st = connection
-                     .prepareStatement("UPDATE USERTABLE SET username=?, userlogin=?, useremail=?, userimage=? WHERE userid=? ")) {
+                     .prepareStatement("UPDATE USERTABLE SET "
+                             + "username=?, userlogin=?, useremail=?, userimage=?, usercity=?, usercountry=? WHERE userid=? ")) {
             st.setString(1, user.getName());
             st.setString(2, user.getLogin());
             st.setString(3, user.getEmail());
             st.setString(4, user.getImage());
-            st.setInt(5, user.getId());
+            st.setString(5, user.getCity());
+            st.setString(6, user.getCountry());
+            st.setInt(7, user.getId());
             st.execute();
         } catch (SQLException e) {
             LOG.error("Add method SQL ecxeption", e);
@@ -139,8 +142,10 @@ public class DBStore implements Store {
                 user.setName(answer.getString("username"));
                 user.setLogin(answer.getString("userlogin"));
                 user.setEmail(answer.getString("useremail"));
-                user.setCreateDate(answer.getDate("usercrdate"));
+                user.setCreateDate(answer.getTimestamp("usercrdate"));
                 user.setImage(answer.getString("userimage"));
+                user.setCity(answer.getString("usercity"));
+                user.setCountry(answer.getString("usercountry"));
                 return user;
             }
         } catch (SQLException e) {
@@ -167,8 +172,10 @@ public class DBStore implements Store {
                 user.setName(answer.getString("username"));
                 user.setLogin(answer.getString("userlogin"));
                 user.setEmail(answer.getString("useremail"));
-                user.setCreateDate(answer.getDate("usercrdate"));
+                user.setCreateDate(answer.getTimestamp("usercrdate"));
                 user.setImage(answer.getString("userimage"));
+                user.setCity(answer.getString("usercity"));
+                user.setCountry(answer.getString("usercountry"));
                 list.add(user);
             }
         } catch (SQLException e) {
@@ -247,5 +254,20 @@ public class DBStore implements Store {
             LOG.error("Get Role SQL ecxeption", e);
         }
         return null;
+    }
+
+    public List<String> getCity() {
+        List<String> tempList = new LinkedList<>();
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement st = connection
+                     .prepareStatement("SELECT * FROM CITIES")) {
+            ResultSet answer = st.executeQuery();
+            while (answer.next()) {
+                tempList.add(answer.getString("usercities"));
+            }
+        } catch (SQLException e) {
+            LOG.error("Get cities SQL ecxeption", e);
+        }
+        return tempList;
     }
 }

@@ -7,14 +7,18 @@ package servlets.filter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import servlets.user.Role;
-import servlets.user.ValidateService;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import servlets.mainprogramm.Role;
+import servlets.mainprogramm.ValidateService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,32 +37,33 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/Pages/SingIn.jsp").forward(req, resp);
+        req.getRequestDispatcher("/HTMLREF/login.html").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map<String, String> keys = findParametrs(req);
-        String login = keys.get("login"), password = keys.get("password");
-        if (login != null && password != null) {
-            for (var user : LOGIC.findALL()) {
-                Role role = LOGIC.getRole(user);
-                if (user.getLogin().equalsIgnoreCase(login)
-                        && role.getPassword().equalsIgnoreCase(password)) {
-                    HttpSession session = req.getSession();
-                    session.setAttribute("role", role);
-                    break;
+        try (BufferedReader read = req.getReader()) {
+            StringBuilder fullLine = new StringBuilder();
+            String oneLine;
+            while ((oneLine = read.readLine()) != null) {
+                fullLine.append(oneLine);
+            }
+            JSONObject json = (JSONObject) new JSONParser().parse(fullLine.toString());
+            String login = (String) json.get("login"), password = (String) json.get("password");
+            if (login != null && password != null) {
+                for (var user : LOGIC.findALL()) {
+                    Role role = LOGIC.getRole(user);
+                    if (user.getLogin().equalsIgnoreCase(login)
+                            && role.getPassword().equalsIgnoreCase(password)) {
+                        HttpSession session = req.getSession();
+                        session.setAttribute("role", role);
+                        resp.sendRedirect(String.format("%s/users", req.getContextPath()));
+                        break;
+                    }
                 }
             }
+        } catch (IOException | ParseException e) {
+            LOG.error("login error", e);
         }
-        req.getRequestDispatcher(String.format("%s/", req.getContextPath())).forward(req, resp);
-    }
-
-    private Map<String, String> findParametrs(HttpServletRequest req) {
-        HashMap<String, String> temp = new HashMap<>();
-        req.getParameterNames().asIterator().forEachRemaining(e -> {
-            temp.put(e, req.getParameter(e));
-        });
-        return temp;
     }
 }

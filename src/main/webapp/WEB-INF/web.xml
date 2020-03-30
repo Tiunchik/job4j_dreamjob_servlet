@@ -5,7 +5,9 @@
 		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-<!--
+    <!-- main programm servlets -->
+
+
     <filter>
         <filter-name>Filter</filter-name>
         <filter-class>servlets.filter.Filter</filter-class>
@@ -18,41 +20,30 @@
 
 
     <servlet>
-        <servlet-name>EchoServlet</servlet-name>
-        <servlet-class>servlets.first.EchoServlet</servlet-class>
-        <load-on-startup>3</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>EchoServlet</servlet-name>
-        <url-pattern>/echo</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SingIn</servlet-name>
+        <servlet-name>SignIn</servlet-name>
         <servlet-class>servlets.filter.SignInServlet</servlet-class>
-        <load-on-startup>3</load-on-startup>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>SingIn</servlet-name>
-        <url-pattern>/singin</url-pattern>
+        <servlet-name>SignIn</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>UserServlet</servlet-name>
-        <servlet-class>servlets.user.UserServlet</servlet-class>
+        <servlet-class>servlets.mainprogramm.UserListServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/users</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>UserCreateServlet</servlet-name>
-        <servlet-class>servlets.user.UserCreateServlet</servlet-class>
+        <servlet-class>servlets.mainprogramm.UserCreateServlet</servlet-class>
         <load-on-startup>3</load-on-startup>
     </servlet>
 
@@ -63,7 +54,7 @@
 
     <servlet>
         <servlet-name>UserUpdateServlet</servlet-name>
-        <servlet-class>servlets.user.UserUpdateServlet</servlet-class>
+        <servlet-class>servlets.mainprogramm.MainPostServlet</servlet-class>
         <load-on-startup>3</load-on-startup>
     </servlet>
 
@@ -80,13 +71,13 @@
 
     <servlet>
         <servlet-name>Download</servlet-name>
-        <servlet-class>servlets.user.Donwload</servlet-class>
+        <servlet-class>servlets.mainprogramm.Donwload</servlet-class>
         <load-on-startup>4</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>Images</servlet-name>
-        <servlet-class>servlets.user.UserLoadImage</servlet-class>
+        <servlet-class>servlets.mainprogramm.UserLoadImage</servlet-class>
         <load-on-startup>4</load-on-startup>
     </servlet>
 
@@ -97,7 +88,7 @@
 
     <servlet>
         <servlet-name>logout</servlet-name>
-        <servlet-class>servlets.user.UserRoles</servlet-class>
+        <servlet-class>servlets.mainprogramm.UserRoles</servlet-class>
         <load-on-startup>4</load-on-startup>
     </servlet>
 
@@ -106,7 +97,8 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
--->
+    <!-- Servlts for testing-->
+
     <servlet>
         <servlet-name>GreetingServlet</servlet-name>
         <servlet-class>servlets.ajax.GreetingsServlet</servlet-class>
@@ -137,13 +129,15 @@
         <url-pattern>/start</url-pattern>
     </servlet-mapping>
 
-    <filter>
-        <filter-name>CorsFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>CorsFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    <servlet>
+        <servlet-name>EchoServlet</servlet-name>
+        <servlet-class>servlets.first.EchoServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>EchoServlet</servlet-name>
+        <url-pattern>/echo</url-pattern>
+    </servlet-mapping>
 
 </web-app>

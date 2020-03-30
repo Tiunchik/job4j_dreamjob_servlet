@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boostrap first task</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function getUsers() {
+            getrole();
+            $.ajax({
+                url: 'http://localhost:8080/servlets/users',
+                method: 'POST',
+                dataType: 'json'
+            }).done(function (data) {
+                $(data).each(function (index, el) {
+                    $('#table_body').append(
+                        '<tr><td>' + data[index].id + '</td>' +
+                        '<td>' + data[index].name + '</td>' +
+                        '<td>' + data[index].login + '</td>' +
+                        '<td>' + data[index].email + '</td>' +
+                        '<td>' + data[index].createDate + '</td>' +
+                        '<td>' + '<img src=' + getContextPath() + '/download?name='
+                        + data[index].image + ' alt="Italian Trulli" style="width:80px" id="image' + data[index].id + '"></td>' +
+                        '<td>' + data[index].city + '</td>' +
+                        '<td>' + data[index].country + '</td>' +
+                        '<td>' + addbuttons(data[index].id) + '</td></tr>'
+                    )
+                    ;
+                })
+            }).fail(function (data) {
+                console.log(data);
+            });
+        }
+
+        function addbuttons(number) {
+            if ($('#role').val() == "admin") {
+                var buttons = "<form>" +
+                    "<div class=\"btn-group\">\n" +
+                    "  <input type='hidden' name='id' value='" + number + "'>" +
+                    "  <button type=\"button\" class=\"btn btn-primary\" onclick='showImageModal(" + number + ")'>Edit Image</button>\n" +
+                    "  <button type=\"submit\" class=\"btn btn-primary\" formaction='" + getContextPath() + "/edit' formmethod='get'>Edit</button>\n" +
+                    "  <button type=\"button\" class=\"btn btn-primary\" id='button" + number + "' onclick='delUser(" + number + ")'>Delete</button>\n" +
+                    "</div>" +
+                    "</form>";
+                return buttons.toString();
+            }
+            if ($('#user').val() == (number + "")) {
+                var buttons = "<form>" +
+                    "<div class=\"btn-group\">\n" +
+                    "  <input type='hidden' name='id' value='" + number + "'>" +
+                    "  <button type=\"button\" class=\"btn btn-primary\" onclick='showImageModal(" + number + ")'>Edit Image</button>\n" +
+                    "  <button type=\"submit\" class=\"btn btn-primary\" formaction='" + getContextPath() + "/edit' formmethod='get'>Edit</button>\n" +
+                    "</div>" +
+                    "</form>";
+                return buttons.toString();
+            }
+            return "";
+        }
+
+        function getContextPath() {
+            return location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+        }
+
+        function delUser(num) {
+            $.ajax({
+                url: getContextPath() + '/edit',
+                method: 'POST',
+                contentType: 'json',
+                data: JSON.stringify({'id': "" + num, 'action': 'delete'})
+            }).done(function () {
+                $("#button" + num).closest("tr").remove();
+            })
+        }
+
+        function valedate(id) {
+            if (id == "" || id == null) {
+                alert("You fill in incorrect ID, please fill in new number");
+                return false;
+            }
+            var table = document.getElementById("iterable_table");
+            for (var i = 0; i < table.rows.length; i++) {
+                if (table.rows[i].cells[0].innerHTML == id) {
+                    alert("You fill in incorrect ID, please fill in new number");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function addUser() {
+            var id = $('#addnumber').val();
+            if (valedate(id)) {
+                $.ajax({
+                    url: getContextPath() + '/edit',
+                    method: 'POST',
+                    contentType: 'json',
+                    data: JSON.stringify({
+                        'id': "" + id,
+                        'name': $('#addname').val(),
+                        'login': $('#addlogin').val(),
+                        'image': 'none',
+                        'action': 'addUser'
+                    })
+                }).done(function () {
+                    var m = new Date();
+                    $('#table_body').append('<tr><th>' + id + '</th>' +
+                        '<td>' + $('#addname').val() + '</td>' +
+                        '<td>' + $('#addlogin').val() + '</td>' +
+                        '<td>' + "_" + '</td>' +
+                        '<td>' + m.getMonth() + "." + m.getDate() + "." + m.getFullYear() + '</td>' +
+                        '<td>' + "_" + '</td>' +
+                        '<td>' + "Saint-Peterburg" + '</td>' +
+                        '<td>' + "Russia" + '</td>' +
+                        '<td>' + addbuttons(id) + '</td>' +
+                        '</tr>');
+                    $('#addnumber').val("");
+                    $('#addname').val("");
+                    $('#addlogin').val("");
+                    $('#offmodal').click();
+                }).fail(function (data) {
+                    console.log(data);
+                });
+            }
+        }
+
+        function showImageModal(num) {
+            $('#ImageModal').modal('toggle');
+            $('#imagenumber').val(num);
+        }
+
+        function prepareimage() {
+            var data = new FormData();
+            data.append('datafile', $("#loadimage").get(0).files[0]);
+            $.ajax({
+                type: "POST",
+                url: getContextPath() + "/load",
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false
+            }).done(function () {
+                $('#photo').attr('src', getContextPath() + '/download?name=images/tempfile.jpg');
+            })
+        }
+
+        function saveImage() {
+            var id = $('#imagenumber').val();
+            $.ajax({
+                type: "POST",
+                url: getContextPath() + "/edit",
+                data: JSON.stringify({'id': id, 'action': 'saveImage'}),
+                contentType: 'json'
+            }).done(function () {
+                location.href = location.href;
+            })
+        }
+
+        function logout() {
+            location.href = getContextPath() + "/logout";
+        }
+
+        function getrole() {
+            $.ajax({
+                url: getContextPath() + "/logout",
+                method: 'POST',
+                dataType: 'json'
+            }).done(function (data) {
+                $('#role').val(data.role);
+                $('#user').val(data.id);
+            })
+        }
+
+    </script>
+</head>
+<body onload="getUsers()">
+<input type="hidden" id="user">
+<input type="hidden" id="role">
+<!-- MAIN USER IMAGE -->
+<div class="container" id="reloadDiv">
+    <h2>Table of employee</h2>
+    <p>table don't consieder information about employee's access rights</p>
+    <table class="table table-striped" id="iterable_table">
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Create Date</th>
+            <th>Photo</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Edit</th>
+        </tr>
+        </thead>
+        <tbody id="table_body">
+        </tbody>
+    </table>
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add employee</button>
+    <!-- Trigger to loguot -->
+    <button type="button" class="btn btn-primary" onclick="logout()">Logout</button>
+</div>
+
+
+<!-- Modal ADD USER-->
+<div id="addModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Form of adding new employee</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="addnumber">Employee number</label>
+                    <input type="number" class="form-control" id="addnumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="addname">Employee name</label>
+                    <input type="text" class="form-control" id="addname" required>
+                </div>
+                <div class="form-group">
+                    <label for="addlogin">Employee login</label>
+                    <input type="text" class="form-control" id="addlogin" required>
+                </div>
+            </div>
+            <p class="modal-body">Employee will have standrad password "0000", to change password please press edit
+                button</p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="addUser()">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="offmodal">Back</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal CHANGE IMAGE -->
+<div id="ImageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Form of adding new employee</h4>
+            </div>
+            <div class="modal-body">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="" class="media-object" style="width:80px" id="photo">
+                    </div>
+                    <div class="media-body">
+                        <input type="hidden" id="imagenumber">
+                        <input type="file" id="loadimage" onchange="prepareimage()">
+                    </div>
+                </div>
+            </div>
+            <p class="modal-body">Please choose photo for employee</p>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" onclick="saveImage()">Save photo</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="offchangemodal">Back</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

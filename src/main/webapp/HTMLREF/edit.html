@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boostrap first task</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function load() {
+            var urlParams = new URLSearchParams(window.location.search);
+            request(urlParams.get('id'));
+            getrole();
+        }
+
+        function request(id) {
+            $.ajax({
+                url: getContextPath() + '/edit',
+                method: 'POST',
+                data: JSON.stringify({'action': 'getCities'}),
+                contentType: 'json',
+                dataType: 'json'
+            }).done(function (data) {
+                $(data).each(function (index, el) {
+                    $("#city").append('<option value="' + data[index] + '">"' + data[index] + '"</option>');
+                })
+            });
+            $.ajax({
+                url: getContextPath() + '/edit',
+                method: 'POST',
+                data: JSON.stringify({'id': id, 'action': 'getUser'}),
+                contentType: 'json',
+                dataType: 'json'
+            }).done(function (data) {
+                $('#id').val(data.id);
+                $('#name').val(data.name);
+                $('#login').val(data.login);
+                $('#email').val(data.email);
+                $('#city').val(data.city);
+                $('#country').val(data.country);
+            });
+            $.ajax({
+                url: getContextPath() + '/edit',
+                method: 'POST',
+                data: JSON.stringify({'id': id, 'action': 'getRole'}),
+                contentType: 'json',
+                dataType: 'json'
+            }).done(function (data) {
+                console.log(data);
+                $('#password').val(data.password);
+                $('#sel1').val(data.role);
+            });
+
+        }
+
+        function getContextPath() {
+            return location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+        }
+
+        function saveChanges() {
+            var data = {
+                'action': "update",
+                'id': $('#id').val(), 'name': $('#name').val(), 'login': $('#login').val(),
+                'email': $('#email').val(), 'role': $('#self1').val(), 'password': $('#password').val(),
+                'city': $('#city').val(), 'country': $('#country').val()
+            };
+            $.ajax({
+                url: getContextPath() + '/edit',
+                method: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'json',
+            });
+            backToUser();
+        }
+
+        function backToUser() {
+            location.href = getContextPath() + '/users';
+        }
+
+        function getrole() {
+            $.ajax({
+                url: getContextPath() + "/logout",
+                method: 'POST',
+                dataType: 'json'
+            }).done(function (data) {
+                if ($('#role').val(data.role) != "admin") {
+                    $('#rolediv').remove();
+                }
+            })
+        }
+    </script>
+</head>
+<body onload="load()">
+<div class="container">
+    <h1>Change user information</h1>
+    <p>Plaese make changes with user personal information and press "Execute" button</p>
+</div>
+
+<div class="container">
+    <h2>Change user information</h2>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="id">Employee number:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" id="id" name="id" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="name">Employee name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Enter employee name" name="name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="login">Employee login</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="login" placeholder="Enter employee login" name="login">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Employee email</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" placeholder="Enter employee email" name="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="city">Select employee city</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="city">
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="country">Employee country</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="country" placeholder="Enter employee country"
+                       name="country">
+            </div>
+        </div>
+        <div class="form-group" id="rolediv">
+            <label class="control-label col-sm-2" for="sel1">Select employee role</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="sel1">
+                    <option value="admin">Administrator</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password">Employee password</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="password" placeholder="Enter employee password"
+                       name="password" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="saveChanges()">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="backToUser()">Back</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

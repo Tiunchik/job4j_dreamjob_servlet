@@ -1,4 +1,4 @@
-package servlets.user;
+package servlets.mainprogramm;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,24 +42,13 @@ public class ServletsTest {
     }
 
     @Test
-    public void whenWeAddUserBydoPostThneCheckUser() throws ServletException, IOException {
-        when(req.getParameter("name")).thenReturn("Petr Arsentev");
-        when(req.getParameter("id")).thenReturn("0001");
-        when(req.getParameter("image")).thenReturn("0001");
-
-        new UserCreateServlet().doPost(req, resp);
-
-        assertThat(validate.findALL().iterator().next().getName(), is("Petr Arsentev"));
-    }
-
-    @Test
     public void whenWeAddUserAndDeleteThenCheckThrerIsUserIntoBase() throws ServletException, IOException {
         validate.add(new User(1, "Petr Arsentev"));
 
         when(req.getParameter("id")).thenReturn("0001");
         when(req.getParameter("action")).thenReturn("delete");
 
-        new UserServlet().doPost(req, resp);
+        new UserListServlet().doPost(req, resp);
 
         assertNull(validate.findByID(new User(1, "tempname")));
     }
@@ -75,7 +64,7 @@ public class ServletsTest {
         when(req.getParameter("name")).thenReturn("Maxim");
         when(req.getParameter("email")).thenReturn("@gmail");
 
-        new UserUpdateServlet().doPost(req, resp);
+        new MainPostServlet().doPost(req, resp);
 
         temp = validate.findByID(temp);
 
